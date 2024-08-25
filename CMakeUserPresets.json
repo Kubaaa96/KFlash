@@ -1,0 +1,9 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "cmake-build-debug-gcc-131\\conan\\build\\Debug\\generators\\CMakePresets.json"
+    ]
+}

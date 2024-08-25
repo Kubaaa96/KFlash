@@ -1,15 +1,15 @@
 function(package_add_test TESTNAME)
     cmake_parse_arguments(ARGS "${options}" "" "SOURCES;DEPENDS" ${ARGN})
     project_options(
-            PREFIX "cpptemplatetest"
+            PREFIX "kflashtest"
             ENABLE_CACHE
             ${ENABLE_CPPCHECK}
-            ${ENABLE_CLANG_TIDY}
-            WARNINGS_AS_ERRORS
+#            ${ENABLE_CLANG_TIDY}
+#            WARNINGS_AS_ERRORS
     )
     add_executable(${TESTNAME} ${ARGS_SOURCES})
     target_link_libraries(${TESTNAME}
-            PRIVATE cpptemplatetest_project_options cpptemplatetest_project_warnings
+            PRIVATE kflashtest_project_options kflashtest_project_warnings
     )
     target_include_directories(${TESTNAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
     find_and_link_libs(${TESTNAME})

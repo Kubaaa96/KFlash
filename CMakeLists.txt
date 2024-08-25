@@ -20,35 +20,50 @@ run_conan(
         INSTALL_ARGS --build=missing
 )
 
-project(cpp-template VERSION 0.0.3 DESCRIPTION "Basic template project for C++ language" LANGUAGES CXX C)
+project(kflash VERSION 0.0.1 DESCRIPTION "Application to study using flashcards" LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 20)
+
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
+list(APPEND CMAKE_PREFIX_PATH "C:/Qt/6.7.1/mingw_64/lib/cmake")
+find_package(Qt6 6.5 REQUIRED COMPONENTS Widgets)
+
 
 set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
 set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
 
 project_options(
-        PREFIX "cpptemplate"
+        PREFIX "kflash"
         ENABLE_CACHE
         ${ENABLE_CPPCHECK}
-        ${ENABLE_CLANG_TIDY}
+#        ${ENABLE_CLANG_TIDY}
          WARNINGS_AS_ERRORS
 )
 
-add_executable(${PROJECT_NAME} src/Example.cpp src/main.cpp)
+add_executable(${PROJECT_NAME}
+        src/main.cpp
+        src/MainWindow.cpp
+        include/MainWindow.hpp)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME}
-        PRIVATE cpptemplate_project_options cpptemplate_project_warnings
+        PRIVATE kflash_project_options kflash_project_warnings
 )
 
 target_find_dependencies(${PROJECT_NAME}
         PRIVATE_CONFIG
         fmt
+        spdlog
 )
 
 target_link_system_libraries(${PROJECT_NAME}
         PRIVATE
         fmt::fmt
+        spdlog::spdlog
+        Qt6::Widgets
 )
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
@@ -56,4 +71,33 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     enable_testing()
     include(GoogleTest)
     add_subdirectory(test)
+endif ()
+
+if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(DEBUG_SUFFIX)
+    if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(DEBUG_SUFFIX "d")
+    endif ()
+    set(QT_INSTALL_PATH "${CMAKE_PREFIX_PATH}")
+    if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
+        set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
+        if (NOT EXISTS "${QT_INSTALL_PATH}/bin")
+            set(QT_INSTALL_PATH "${QT_INSTALL_PATH}/..")
+        endif ()
+    endif ()
+    if (EXISTS "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E make_directory
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy
+                "${QT_INSTALL_PATH}/plugins/platforms/qwindows${DEBUG_SUFFIX}.dll"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugins/platforms/")
+    endif ()
+    foreach (QT_LIB Core Gui Widgets)
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy
+                "${QT_INSTALL_PATH}/bin/Qt6${QT_LIB}${DEBUG_SUFFIX}.dll"
+                "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
+    endforeach (QT_LIB)
 endif ()

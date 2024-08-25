@@ -1,6 +1,15 @@
 #include <fmt/core.h>
-#include "Example.hpp"
+#include <spdlog/spdlog.h>
+#include <QApplication>
+#include "MainWindow.hpp"
 
-int main(){
-    fmt::print("Hello World {}\n", Example::value());
+
+int main(int argc, char *argv[]) {
+    spdlog::info("Hello World\n");
+    QApplication app(argc, argv);
+
+    MainWindow mainWindow;
+    mainWindow.show();
+
+    return app.exec();
 }

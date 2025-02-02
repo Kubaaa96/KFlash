@@ -2,6 +2,8 @@
 
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <spdlog/spdlog.h>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {
@@ -21,10 +23,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto *layout = new QVBoxLayout(centralWidget);
 
+    lineEdit = new QLineEdit(centralWidget);
+    lineEdit->setPlaceholderText("Enter Text");
+
     auto *button = new QPushButton("Click Me", this);
 
+    layout->addWidget(lineEdit);
     layout->addWidget(button);
+
+    connect(button, &QPushButton::released, this, &MainWindow::showLineEditText);
 }
 
 MainWindow::~MainWindow() {
+}
+
+void MainWindow::showLineEditText() {
+    spdlog::info("{}", lineEdit->text().toStdString());
 }

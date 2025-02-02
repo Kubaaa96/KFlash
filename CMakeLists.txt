@@ -7,7 +7,7 @@ endif()
 
 # Add project_options from https://github.com/aminya/project_options
 # Change the version in the following URL to update the package (watch the releases of the repository for future updates)
-set(PROJECT_OPTIONS_VERSION "v0.36.1")
+set(PROJECT_OPTIONS_VERSION "v0.41.0")
 FetchContent_Declare(
         _project_options
         URL https://github.com/aminya/project_options/archive/refs/tags/${PROJECT_OPTIONS_VERSION}.zip)
@@ -29,7 +29,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-list(APPEND CMAKE_PREFIX_PATH "C:/Qt/6.7.1/mingw_64/lib/cmake")
+list(APPEND CMAKE_PREFIX_PATH "C:/Qt/6.8.2/lib/cmake") # Change to your QT directory
 find_package(Qt6 6.5 REQUIRED COMPONENTS Widgets)
 
 
@@ -41,7 +41,8 @@ project_options(
         ENABLE_CACHE
         ${ENABLE_CPPCHECK}
 #        ${ENABLE_CLANG_TIDY}
-         WARNINGS_AS_ERRORS
+        WARNINGS_AS_ERRORS
+        CPPCHECK_OPTIONS --library=qt
 )
 
 add_executable(${PROJECT_NAME}

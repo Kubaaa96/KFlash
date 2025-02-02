@@ -7,7 +7,7 @@ class ExampleRecipe(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("spdlog/1.14.1")
+        self.requires("spdlog/1.15.0")
         self.requires("gtest/1.15.0")
 
     def layout(self):

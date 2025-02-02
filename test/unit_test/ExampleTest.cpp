@@ -3,7 +3,7 @@
 
 
 struct ExampleTest : testing::Test {
-    public:
+public:
 
 };
 

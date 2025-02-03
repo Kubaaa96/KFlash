@@ -1,16 +1,15 @@
-#include "MainWindow.hpp"
+#include "ui/MainWindow.hpp"
 
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <spdlog/spdlog.h>
 
+#include "ui/MainMenu/MenuBar.hpp"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent) {
-
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     resize(960, 540);
 
-    constexpr QSize resNHD{640,360};
+    constexpr QSize resNHD{640, 360};
     setMinimumSize(resNHD);
 
     constexpr QSize res4K{3840, 2160};
@@ -31,11 +30,13 @@ MainWindow::MainWindow(QWidget *parent)
     layout->addWidget(lineEdit);
     layout->addWidget(button);
 
+    auto *menuBar = new MenuBar(this);
+    setMenuBar(menuBar);
+
     connect(button, &QPushButton::released, this, &MainWindow::showLineEditText);
 }
 
-MainWindow::~MainWindow() {
-}
+MainWindow::~MainWindow() {}
 
 void MainWindow::showLineEditText() {
     spdlog::info("{}", lineEdit->text().toStdString());

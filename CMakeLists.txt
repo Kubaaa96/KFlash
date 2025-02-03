@@ -47,8 +47,14 @@ project_options(
 
 add_executable(${PROJECT_NAME}
         src/main.cpp
-        src/MainWindow.cpp
-        include/MainWindow.hpp)
+
+        include/ui/MainMenu/MenuBar.hpp
+        include/ui/MainWindow.hpp
+
+        src/ui/MainMenu/MenuBar.cpp
+        src/ui/MainWindow.cpp
+)
+
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME}
         PRIVATE kflash_project_options kflash_project_warnings

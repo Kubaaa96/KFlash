@@ -1,6 +1,6 @@
 #include <spdlog/spdlog.h>
 #include <QApplication>
-#include "MainWindow.hpp"
+#include "ui/MainWindow.hpp"
 
 
 int main(int argc, char *argv[]) {
